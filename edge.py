@@ -20,9 +20,10 @@ def detect_edge_sid():
 
             try:
                 sub_idx = 0
-                sub_key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, reg_path + '\\' + app_sid)
+                sub_key = _winreg.OpenKey(
+                    _winreg.HKEY_CURRENT_USER, reg_path + '\\' + app_sid)
                 while True:
-                    name, value, t = _winreg.EnumValue(sub_key, sub_idx)
+                    name, value, _ = _winreg.EnumValue(sub_key, sub_idx)
                     sub_idx += 1
 
                     if r'@{Microsoft.MicrosoftEdge_' in value:
@@ -47,6 +48,7 @@ def enable_loopback(app_sid):
 
     p1 = subprocess.Popen(['CheckNetIsolation.exe', 'loopbackexempt', '-a', sid_cmd], stdout=subprocess.PIPE)
     result = p1.communicate()
+
     if result[1] is None:
         if u'完成' in result[0].decode('gb2312'):
             # print u'执行结果: {0}'.format(result[0].decode('gb2312'))
@@ -61,6 +63,9 @@ def enable_loopback(app_sid):
 
 
 def main():
+    """
+    主函数
+    """
     app_sid = detect_edge_sid()
     if app_sid is None:
         print u'注册表中没有找到Edge的sid'
